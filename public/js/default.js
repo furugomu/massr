@@ -702,6 +702,52 @@ $(function(){
 	});
 
 	/*
+	 * share search
+	 */
+	function shareSearch(method, success, fail) {
+		$.ajax({
+			url: '/search/pin',
+			type: method,
+			dataType: 'json',
+			data: {q: $('#query-string').text()}
+		}).done(function(result){
+			success(result);
+		}).fail(function(XMLHttpRequest, textStatus, errorThrown){
+			fail(XMLHttpRequest.status, textStatus);
+		});
+	}
+	$('#share-search').on('click', function(){
+		shareSearch('POST',
+		function(result){
+			var q = result[0]['q'];
+			var l = result[0]['label'];
+			$('#search-pin').append('<li><a href="/search?q=' + q + '" title="' + q + '">' + l);
+		},
+		function(status, msg){
+			if(XMLHttpRequest.status != 409){
+				// error without 409 (conflict)
+				message.error(msg + '(' + status + ')');
+			}
+		});
+		return false;
+	});
+
+	$('#unshare-search').on('click', function(){
+		shareSearch('DELETE',
+		function(result){
+			console.info($('.search-pin a[title="' + result[0]['q'] + '"]'));
+		},
+		function(status, msg){
+			if(XMLHttpRequest.status != 404){
+				// error without 404 (not found)
+				message.error(msg + '(' + status + ')');
+			}
+		});
+		shareSearch('DELETE');
+		return false;
+	});
+
+	/*
 	 * plugins
 	 */
 	function plugin_setup(name, opts){

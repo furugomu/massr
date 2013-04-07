@@ -3,7 +3,12 @@
 		%header
 			%h1
 				- if defined?(q) && q
-					Search "#{q}" /
-					%a{:href => "/"}<#{_site_name}
-				- else
-					%a{:href => "/"}<#{_site_name}
+					Search "
+					%span#query-string<#{q}
+					"
+					%a.share-search#share-search{href: '#'}
+						%i.icon-share-alt.share-search{title: 'share search result'}
+					%a.share-search#unshare-search{href: '#'}
+						%i.icon-remove.share-search{title: 'unshare search result'}
+					\/
+				%a{:href => "/"}<#{_site_name}
