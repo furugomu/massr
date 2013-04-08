@@ -59,14 +59,18 @@ module Massr
 				SearchPin.destroy(pin.id)
 				return [{'q' => pin.word, 'label' => pin.label}].to_json
 			rescue NoMethodError
-				puts $!
 				return 404
 			end
 		end
 
 		put '/search/pin' do
-			pin = SearchPin::new(params[:q], params[:label])
-			return [{'q' => pin.word, 'label' => pin.label}].to_json
+			begin
+				pin = SearchPin::find_by_word(params[:q])
+				pin.label = params[:label]
+				return [{'q' => pin.word, 'label' => pin.label}].to_json
+			rescue NoMethodError
+				return 404
+			end
 		end
 	end
 end

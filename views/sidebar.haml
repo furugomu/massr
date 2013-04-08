@@ -36,7 +36,7 @@
 						%button.btn{:id => "search-button", :type => "submit"}
 							%i.icon-search
 			%h2<Pin
-			%ul#search-pin
+			%ul.sidebar-menu.sidebar-list#search-pin
 				- Massr::SearchPin.all.each do |pin|
 					%li.search-pin
 						%a{href: "/search?q=#{pin.word}", title: pin.word}<#{pin.label}

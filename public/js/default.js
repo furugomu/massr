@@ -711,17 +711,23 @@ $(function(){
 			dataType: 'json',
 			data: {q: $('#query-string').text()}
 		}).done(function(result){
+			$('a.share-search').toggleClass('hide');
 			success(result);
 		}).fail(function(XMLHttpRequest, textStatus, errorThrown){
 			fail(XMLHttpRequest.status, textStatus);
 		});
 	}
+
 	$('#share-search').on('click', function(){
 		shareSearch('POST',
 		function(result){
 			var q = result[0]['q'];
 			var l = result[0]['label'];
-			$('#search-pin').append('<li><a href="/search?q=' + q + '" title="' + q + '">' + l);
+			$('#search-pin').append(
+				$('<li>').addClass('search-pin').append(
+					$('<a>').attr('href', '/search?q=' + q).attr('title', q).text(l)
+				)
+			);
 		},
 		function(status, msg){
 			if(XMLHttpRequest.status != 409){
@@ -735,7 +741,11 @@ $(function(){
 	$('#unshare-search').on('click', function(){
 		shareSearch('DELETE',
 		function(result){
-			console.info($('.search-pin a[title="' + result[0]['q'] + '"]'));
+			$('.search-pin a').each(function(){
+				if($(this).attr('title') == result[0].q){
+					$(this).parent().remove();
+				}
+			});
 		},
 		function(status, msg){
 			if(XMLHttpRequest.status != 404){
@@ -743,7 +753,6 @@ $(function(){
 				message.error(msg + '(' + status + ')');
 			}
 		});
-		shareSearch('DELETE');
 		return false;
 	});
 
