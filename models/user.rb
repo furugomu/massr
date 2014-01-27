@@ -18,7 +18,7 @@ module Massr
 		key :twitter_icon_url_https,  :type => String , :required => true
 		key :name,                    :type => String , :required => true
 		key :email,                   :type => String
-		key :status,                  :type => Integer, :default  => UNAUTHORIZED
+		key :status,                  :type => Integer, :default  => AUTHORIZED
 		key :res_ids,                  Array
 
 		timestamps!
